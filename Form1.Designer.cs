@@ -58,6 +58,7 @@
             toolStripStatusLabel1 = new ToolStripStatusLabel();
             CleanButton = new Button();
             label9 = new Label();
+            TrimCheckBox = new CheckBox();
             statusStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -80,7 +81,7 @@
             // 
             // FromTextBox
             // 
-            FromTextBox.Location = new Point(92, 97);
+            FromTextBox.Location = new Point(137, 96);
             FromTextBox.Name = "FromTextBox";
             FromTextBox.Size = new Size(49, 23);
             FromTextBox.TabIndex = 2;
@@ -89,7 +90,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(14, 100);
+            label2.Location = new Point(96, 100);
             label2.Name = "label2";
             label2.Size = new Size(35, 16);
             label2.TabIndex = 2;
@@ -106,7 +107,7 @@
             // 
             // ToTextBox
             // 
-            ToTextBox.Location = new Point(172, 97);
+            ToTextBox.Location = new Point(217, 96);
             ToTextBox.Name = "ToTextBox";
             ToTextBox.Size = new Size(49, 23);
             ToTextBox.TabIndex = 3;
@@ -115,7 +116,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(147, 100);
+            label4.Location = new Point(192, 99);
             label4.Name = "label4";
             label4.Size = new Size(19, 16);
             label4.TabIndex = 7;
@@ -324,11 +325,25 @@
             label9.TabIndex = 32;
             label9.Text = "Ident Archiver 1.0";
             // 
+            // TrimCheckBox
+            // 
+            TrimCheckBox.AutoSize = true;
+            TrimCheckBox.Checked = true;
+            TrimCheckBox.CheckState = CheckState.Checked;
+            TrimCheckBox.Location = new Point(14, 99);
+            TrimCheckBox.Name = "TrimCheckBox";
+            TrimCheckBox.Size = new Size(49, 20);
+            TrimCheckBox.TabIndex = 33;
+            TrimCheckBox.Text = "Trim";
+            TrimCheckBox.UseVisualStyleBackColor = true;
+            TrimCheckBox.CheckedChanged += TrimCheckBox_CheckedChanged;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 16F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 588);
+            Controls.Add(TrimCheckBox);
             Controls.Add(CleanButton);
             Controls.Add(statusStrip1);
             Controls.Add(label8);
@@ -399,5 +414,7 @@
         private ToolStripStatusLabel toolStripStatusLabel1;
         private Button CleanButton;
         private Label label9;
+        private CheckBox checkBox1;
+        private CheckBox TrimCheckBox;
     }
 }

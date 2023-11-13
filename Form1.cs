@@ -1,5 +1,5 @@
+using System.Data;
 using System.Diagnostics;
-using System.Text;
 
 namespace Ident_Archiver
 {
@@ -28,8 +28,8 @@ namespace Ident_Archiver
             language: {3}
             fulltitle: {4}
             watermark: {5}
-            source: {6}
-            sourcetext: {7}
+            sourceurl: {6}
+            source: {7}
             ---
             """;
 
@@ -111,7 +111,7 @@ namespace Ident_Archiver
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
                 FileName = Properties.Settings.Default.ytdlplocation,
-                Arguments = "--download-sections \"*" + FromTextBox.Text + "-" + ToTextBox.Text + "\" -P \"" + Properties.Settings.Default.repolocation + "\\media\" -o \"" + currentFileName + ".mp4\" \"" + UrlTextBox.Text + "\"",
+                Arguments = (TrimCheckBox.Checked ? "--download-sections \"*" + FromTextBox.Text + "-" + ToTextBox.Text + "\" " : "") + "-f mp4 -P \"" + Properties.Settings.Default.repolocation + "\\media\" -o \"" + currentFileName + ".mp4\" \"" + UrlTextBox.Text + "\"",
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
                 CreateNoWindow = true
@@ -161,6 +161,20 @@ namespace Ident_Archiver
             ToTextBox.Text = @"10:00";
             STextBox.Text = "";
             STTextBox.Text = "";
+        }
+
+        private void TrimCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (TrimCheckBox.Checked)
+            {
+                FromTextBox.Enabled = true;
+                ToTextBox.Enabled = true;
+            }
+            else
+            {
+                FromTextBox.Enabled = false;
+                ToTextBox.Enabled = false;
+            }
         }
     }
 }
