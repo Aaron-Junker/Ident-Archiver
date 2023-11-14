@@ -266,6 +266,7 @@
             // 
             CmdTextBox.Location = new Point(14, 403);
             CmdTextBox.Name = "CmdTextBox";
+            CmdTextBox.PlaceholderText = "Command";
             CmdTextBox.ReadOnly = true;
             CmdTextBox.Size = new Size(776, 23);
             CmdTextBox.TabIndex = 27;
@@ -275,6 +276,7 @@
             CmdOutTextBox.Location = new Point(14, 432);
             CmdOutTextBox.Multiline = true;
             CmdOutTextBox.Name = "CmdOutTextBox";
+            CmdOutTextBox.PlaceholderText = "Output";
             CmdOutTextBox.ReadOnly = true;
             CmdOutTextBox.Size = new Size(776, 116);
             CmdOutTextBox.TabIndex = 28;
