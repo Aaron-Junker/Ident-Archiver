@@ -71,7 +71,9 @@ namespace Ident_Archiver
                 "Schweizerische Eidgenossenschaft",
                 "Source",
                 "ABC",
-                "BBC"
+                "BBC",
+                "ZDF",
+                "ARD",
             });
             OrganizationTextBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
             WatermarkTextBox.AutoCompleteCustomSource = OrganizationTextBox.AutoCompleteCustomSource;
