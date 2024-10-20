@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Reflection;
 
 namespace Ident_Archiver
 {
@@ -35,17 +36,38 @@ namespace Ident_Archiver
         public Form1()
         {
             new WelcomeForm().ShowDialog();
+            if (Properties.Settings.Default.repolocation == "" || Properties.Settings.Default.ytdlplocation == "")
+            {
+                new Settings().ShowDialog();
+            }
+
+            Settings.CheckSettings(Properties.Settings.Default.ytdlplocation, Properties.Settings.Default.repolocation);
 
             CheckForFfmpeg();
             InitializeComponent();
+
+            label9.Text = "Ident Archiver v" + Assembly.GetExecutingAssembly().GetName().Version!.Major + "." + Assembly.GetExecutingAssembly().GetName().Version!.Minor;
 
             FormBorderStyle = FormBorderStyle.FixedSingle;
 
             MainMenuStrip = new MenuStrip();
 
             // ReSharper disable once RedundantExplicitParamsArrayCreation
-            MainMenuStrip.Items.Add(new ToolStripMenuItem("File", null, new[] { new ToolStripMenuItem("Settings", null, static (_, _) => new Settings().ShowDialog()), new ToolStripMenuItem("Start screen", null, static (_, _) => new WelcomeForm().ShowDialog()) }));
-
+            MainMenuStrip.Items.Add(new ToolStripMenuItem("File", null, 
+                [
+                    new ToolStripMenuItem("Settings", null, static (_, _) => new Settings().ShowDialog()),
+                    new ToolStripMenuItem("Start screen", null, static (_, _) => new WelcomeForm().ShowDialog()),
+                ]));
+            MainMenuStrip.Items.Add(new ToolStripMenuItem("Categories", null, 
+                [
+                    new ToolStripMenuItem("Add new language", null, static (_, _) => new NewLanguageForm().ShowDialog()),
+                    new ToolStripMenuItem("Add new organization", null, static (_, _) => new NewOrgForm().ShowDialog()),
+                ]));
+            MainMenuStrip.Items.Add(new ToolStripMenuItem("Help", null,
+                [
+                    new ToolStripMenuItem("About", null, static (_, _) => MessageBox.Show("Created by Aaron Junker\n\nLicensed from Aaron Junker Technologies under the MIT license.", "About", MessageBoxButtons.OK, MessageBoxIcon.Information)),
+                    new ToolStripMenuItem("GitHub", null, static (_, _) => Process.Start(new ProcessStartInfo("https://github.com/aaron-junker/ident-archiver") { UseShellExecute = true })),
+                ]));
             MainMenuStrip.RenderMode = ToolStripRenderMode.System;
 
             MainMenuStrip.Location = new Point(0, 0);
@@ -59,22 +81,7 @@ namespace Ident_Archiver
             DateTextBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
 
             OrganizationTextBox.AutoCompleteCustomSource = new AutoCompleteStringCollection();
-#pragma warning disable IDE0300
-            OrganizationTextBox.AutoCompleteCustomSource.AddRange(new[]
-#pragma warning restore IDE0300
-            {
-                "SRF",
-                "RTS",
-                "RSI",
-                "RTR",
-                "Disney Channel",
-                "Schweizerische Eidgenossenschaft",
-                "Source",
-                "ABC",
-                "BBC",
-                "ZDF",
-                "ARD",
-            });
+            OrganizationTextBox.AutoCompleteCustomSource.AddRange(OrganizationDropdown);
             OrganizationTextBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
             WatermarkTextBox.AutoCompleteCustomSource = OrganizationTextBox.AutoCompleteCustomSource;
             WatermarkTextBox.AutoCompleteCustomSource.Add("None");
@@ -82,18 +89,32 @@ namespace Ident_Archiver
             WatermarkTextBox.AutoCompleteSource = AutoCompleteSource.CustomSource;
         }
 
+        private static string[] OrganizationDropdown =
+        [
+            "SRF",
+            "RTS",
+            "RSI",
+            "RTR",
+            "Disney Channel",
+            "Schweizerische Eidgenossenschaft",
+            "Source",
+            "ABC",
+            "BBC",
+            "ZDF",
+            "ARD",
+        ];
         private static void CheckForFfmpeg()
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo
+            Process p = new()
             {
-                FileName = "ffmpeg.exe",
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
+                StartInfo = new()
+                {
+                    FileName = "ffmpeg.exe",
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
+                }
             };
-
-            Process p = new Process();
-            p.StartInfo = startInfo;
             try
             {
                 p.Start();
@@ -107,7 +128,7 @@ namespace Ident_Archiver
             p.WaitForExit();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             if (!CheckFilledOutRequiredFields())
             {
@@ -120,7 +141,7 @@ namespace Ident_Archiver
             string currentFileName = OrganizationTextBox.Text + "-" + ShortNameTextBox.Text + "-" + WatermarkTextBox.Text + "-" + LangTextBox.Text + "-" + DateTextBox.Text;
 
             // Download video using youtube-dl
-            ProcessStartInfo startInfo = new ProcessStartInfo
+            ProcessStartInfo startInfo = new()
             {
                 FileName = Properties.Settings.Default.ytdlplocation,
                 Arguments = (TrimCheckBox.Checked ? "--download-sections \"*" + FromTextBox.Text + "-" + ToTextBox.Text + "\" " : "") + "-f mp4 -P \"" + Properties.Settings.Default.repolocation + "\\media\" -o \"" + currentFileName + ".mp4\" \"" + UrlTextBox.Text + "\"",
@@ -131,8 +152,10 @@ namespace Ident_Archiver
 
             CmdTextBox.Text = startInfo.Arguments;
 
-            Process p = new Process();
-            p.StartInfo = startInfo;
+            Process p = new()
+            {
+                StartInfo = startInfo
+            };
             try
             {
                 p.Start();
